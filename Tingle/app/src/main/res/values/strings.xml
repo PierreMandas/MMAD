@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Tingle</string>
+    <string name="last_thing_added">Last thing added:</string>
+    <string name="what_thing">What thing?</string>
+    <string name="where">Where?</string>
+    <string name="add_new_thing">Add new thing</string>
+    <string name="find_thing">Find thing</string>
+    <string name="delete_thing">Delete thing</string>
+    <string name="update_thing">Update thing</string>
+    <string name="list_all_things">List of all things</string>
+    <string name="thing_where_label">Where</string>
+    <string name="thing_where_hint">Where has the item been placed?</string>
+    <string name="thing_what_label">What</string>
+    <string name="thing_what_hint">What item has been placed?</string>
+    <string name="scan_label">Scan</string>
+    <string name="scan_QR_code_hint">The QR code will be placed here</string>
+    <string name="scan_BAR_code_hint">The BAR code will be placed here</string>
+</resources>
