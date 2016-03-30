@@ -48,23 +48,6 @@
             style="?android:listSeparatorTextViewStyle"/>
 
         <TextView
-            android:id="@+id/QR_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="18sp"
-            android:hint="@string/scan_QR_code_hint"
-            android:freezesText="true"/>
-
-        <Button
-            android:id="@+id/scanner_QR"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Scan QR Code">
-        </Button>
-
-        <TextView
             android:id="@+id/Bar_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

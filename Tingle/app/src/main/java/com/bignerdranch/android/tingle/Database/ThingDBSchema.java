@@ -12,7 +12,6 @@ public class ThingDBSchema {
             public static final String WHAT = "what";
             public static final String WHERE = "whereC";
             public static final String DATE = "date";
-            public static final String QRCODE = "QRcode";
             public static final String BARCODE = "Barcode";
         }
     }

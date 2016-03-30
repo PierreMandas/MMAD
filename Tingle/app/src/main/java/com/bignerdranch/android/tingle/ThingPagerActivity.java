@@ -39,7 +39,9 @@ public class ThingPagerActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.activity_thing_pager_view_pager);
 
         mThings = ThingsDB.get(this).getThingsDB();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
+
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {

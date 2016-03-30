@@ -42,7 +42,6 @@ public class ThingsDB extends Observable {
         values.put(ThingTable.Cols.WHAT, thing.getWhat());
         values.put(ThingTable.Cols.WHERE, thing.getWhere());
         values.put(ThingTable.Cols.DATE, thing.getDate().toString());
-        values.put(ThingTable.Cols.QRCODE, thing.getQRcode());
         values.put(ThingTable.Cols.BARCODE, thing.getBarcode());
 
         return values;

@@ -26,7 +26,6 @@ public class ThingAddFragment extends Fragment {
     private ThingsDB sThingsDB;
     private EditText mWhat;
     private EditText mWhere;
-    private TextView mQRcode;
     private TextView mBarcode;
 
     @Override
@@ -42,25 +41,13 @@ public class ThingAddFragment extends Fragment {
 
         mWhat = (EditText) v.findViewById(R.id.thing_what);
         mWhere = (EditText) v.findViewById(R.id.thing_where);
-        mQRcode = (TextView) v.findViewById(R.id.QR_code);
         mBarcode = (TextView) v.findViewById(R.id.Bar_code);
 
         sThingsDB = ThingsDB.get(getActivity());
 
         try {
-            Button scanner = (Button) v.findViewById(R.id.scanner_QR);
+            Button scanner = (Button) v.findViewById(R.id.scanner_BAR);
             scanner.setOnClickListener(new View.OnClickListener() {
-
-                public void onClick(View v) {
-                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                    intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-                    startActivityForResult(intent, 0);
-                }
-
-            });
-
-            Button scanner2 = (Button) v.findViewById(R.id.scanner_BAR);
-            scanner2.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
                     Intent intent = new Intent("com.google.zxing.client.android.SCAN");
@@ -90,10 +77,6 @@ public class ThingAddFragment extends Fragment {
                 if ((mWhat.getText().length() > 0) && (mWhere.getText().length() > 0)) {
                     Thing thing = new Thing(UUID.randomUUID(), mWhat.getText().toString().trim(), mWhere.getText().toString().trim());
 
-                    if(mQRcode.getText().length() > 0) {
-                        thing.setQRcode(mQRcode.getText().toString());
-                    }
-
                     if(mBarcode.getText().length() > 0) {
                         thing.setBarcode(mBarcode.getText().toString());
                     }
@@ -118,17 +101,8 @@ public class ThingAddFragment extends Fragment {
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
                 // Handle successful scan
-                //If QR code, set text of textview to content of QR code
-                if(format.equals("QR_CODE"))
-                {
-                    mQRcode.setText(contents);
-                }
-
                 //If barcode, set text of textview to content of barcode
-                if(format.equals("EAN_13"))
-                {
-                    mBarcode.setText(contents);
-                }
+                mBarcode.setText(contents);
 
                 //Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
                 //toast.setGravity(Gravity.TOP, 25, 400);
@@ -136,7 +110,6 @@ public class ThingAddFragment extends Fragment {
             } else if (resultCode == getActivity().RESULT_CANCELED) {
                 // Handle cancel
                 Toast toast = Toast.makeText(getActivity(), "Scan was Cancelled!", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP, 25, 400);
                 toast.show();
             }
         }

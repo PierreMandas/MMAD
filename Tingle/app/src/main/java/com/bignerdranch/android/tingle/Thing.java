@@ -11,7 +11,6 @@ public class Thing{
     private String mWhat = null;
     private String mWhere = null;
     private String mDate = null;
-    private String mQRcode = null;
     private String mBarcode = null;
 
     //Thing constructor
@@ -30,8 +29,6 @@ public class Thing{
     public void setWhere(String where) { mWhere = where; }
     public String getDate() { return mDate; }
     public void setDate(String Date) { mDate = Date; }
-    public String getQRcode() { return mQRcode; }
-    public void setQRcode(String mQRcode) { this.mQRcode = mQRcode; }
     public String getBarcode() { return mBarcode; }
     public void setBarcode(String mBarcode) { this.mBarcode = mBarcode; }
 }

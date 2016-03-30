@@ -25,7 +25,6 @@ public class ThingBaseHelper extends SQLiteOpenHelper {
                         ThingTable.Cols.WHAT + ", " +
                         ThingTable.Cols.WHERE + ", " +
                         ThingTable.Cols.DATE + ", " +
-                        ThingTable.Cols.QRCODE + ", " +
                         ThingTable.Cols.BARCODE +
                         ")"
         );

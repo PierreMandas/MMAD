@@ -27,12 +27,10 @@ public class ThingCursorWrapper extends CursorWrapper {
         String what = getString(getColumnIndex(ThingTable.Cols.WHAT));
         String where = getString(getColumnIndex(ThingTable.Cols.WHERE));
         String date = getString(getColumnIndex(ThingTable.Cols.DATE));
-        String QRcode = getString(getColumnIndex(ThingTable.Cols.QRCODE));
         String Barcode = getString(getColumnIndex(ThingTable.Cols.BARCODE));
 
         Thing thing = new Thing(UUID.fromString(uuidString), what, where);
         thing.setDate(date);
-        thing.setQRcode(QRcode);
         thing.setBarcode(Barcode);
 
         return thing;
