@@ -1,16 +1,15 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Controller;
 
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bignerdranch.android.tingle.Model.Thing;
+import com.bignerdranch.android.tingle.Model.ThingsDB;
+import com.bignerdranch.android.tingle.R;
+
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -29,6 +34,7 @@ import java.util.UUID;
  * Created by Pierre on 27-03-2016.
  */
 public class ThingPagerFragment extends Fragment {
+    private static final String TAG = "ThingPagerFragment";
     private static final String ARG_THING_ID = "thing_id";
 
     private Thing mThing;
@@ -150,10 +156,13 @@ public class ThingPagerFragment extends Fragment {
                 //If barcode, set text of textview to content of barcode
                 mBarcode.setText(contents);
 
-                new FetchOutpanTask().execute(mBarcode.getText().toString());
+                if(isOnline()) {
+                    new FetchOutpanTask().execute(mBarcode.getText().toString());
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), "No network connection available!", Toast.LENGTH_LONG);
+                    toast.show();
+                }
 
-                //Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
-                //toast.show();
             } else if (resultCode == getActivity().RESULT_CANCELED) {
                 // Handle cancel
                 Toast toast = Toast.makeText(getActivity(), "Scan was Cancelled!", Toast.LENGTH_LONG);
@@ -162,15 +171,48 @@ public class ThingPagerFragment extends Fragment {
         }
     }
 
-    private class FetchOutpanTask extends AsyncTask<String, Void, String> {
+    //Check if WIFI or mobile connection is active.
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    private class FetchOutpanTask extends AsyncTask<String, Void, String[]> {
         @Override
-        protected String doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
             String barCode = params[0];
-            return new OutpanFetcher().fetchItem(barCode);
+            String name = null;
+            String exception = null;
+
+            try {
+                name = new OutpanFetcher().fetchItem(barCode);
+            } catch (JSONException je) {
+                exception = "FailedJSON";
+                Log.e(TAG, "Failed to parse JSON", je);
+            } catch (IOException ioe){
+                exception = "FailedIO";
+                Log.e(TAG, "Failed to fetch item", ioe);
+            }
+
+            return new String[]{name, exception};
         }
 
         @Override
-        protected void onPostExecute(String name) {
+        protected void onPostExecute(String[] args) {
+            String name = args[0];
+            String exception = args[1];
+
+            if(exception != null && !exception.isEmpty() && exception.equals("FailedJSON")) {
+                Toast toast = Toast.makeText(getActivity(), "Failed to parse as JSON.", Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            } else if(exception != null && !exception.isEmpty() && exception.equals("FailedIO") ) {
+                Toast toast = Toast.makeText(getActivity(), "Unable to retrieve web page. URL may be invalid!", Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            }
+
             if(name != null && !name.isEmpty() && !name.equals("null")) {
                 mWhat.setText(name);
             } else {

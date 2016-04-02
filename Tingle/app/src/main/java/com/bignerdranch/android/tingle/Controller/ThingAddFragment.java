@@ -1,11 +1,10 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Controller;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bignerdranch.android.tingle.Model.Thing;
+import com.bignerdranch.android.tingle.Model.ThingsDB;
+import com.bignerdranch.android.tingle.R;
 
 import java.util.UUID;
 

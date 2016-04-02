@@ -1,10 +1,10 @@
-package com.bignerdranch.android.tingle.Database;
+package com.bignerdranch.android.tingle.Model.Database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.bignerdranch.android.tingle.Database.ThingDBSchema.ThingTable;
+import com.bignerdranch.android.tingle.Model.Database.ThingDBSchema.ThingTable;
 
 /**
  * Created by Pierre on 27-03-2016.

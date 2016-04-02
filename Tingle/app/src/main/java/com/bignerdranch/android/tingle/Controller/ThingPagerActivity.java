@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+
+import com.bignerdranch.android.tingle.Model.Thing;
+import com.bignerdranch.android.tingle.Model.ThingsDB;
+import com.bignerdranch.android.tingle.R;
 
 import java.util.List;
 import java.util.UUID;

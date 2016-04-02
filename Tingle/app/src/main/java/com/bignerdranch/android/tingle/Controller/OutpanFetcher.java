@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Controller;
 
 import android.content.Context;
 import android.net.Uri;
@@ -51,20 +51,14 @@ public class OutpanFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public String fetchItem(String barCode) {
+    public String fetchItem(String barCode) throws JSONException, IOException{
         String itemName = null;
 
-        try {
-            String url = "https://api.outpan.com/v2/products/" + barCode + "?apikey=" + API_KEY;
-            String jsonString = getUrlString(url);
-            Log.i(TAG, "Received JSON: " + jsonString);
-            JSONObject jsonBody = new JSONObject(jsonString);
-            parseItem(itemName, jsonBody);
-        } catch (JSONException je) {
-            Log.e(TAG, "Failed to parse JSON", je);
-        } catch (IOException ioe){
-            Log.e(TAG, "Failed to fetch item", ioe);
-        }
+        String url = "https://api.outpan.com/v2/products/" + barCode + "?apikey=" + API_KEY;
+        String jsonString = getUrlString(url);
+        Log.i(TAG, "Received JSON: " + jsonString);
+        JSONObject jsonBody = new JSONObject(jsonString);
+        parseItem(itemName, jsonBody);
 
         return itemName;
     }

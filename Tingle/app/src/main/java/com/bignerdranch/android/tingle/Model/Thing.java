@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Model;
 
 import java.util.Date;
 import java.util.UUID;

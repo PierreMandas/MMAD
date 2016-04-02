@@ -1,14 +1,13 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Model;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.bignerdranch.android.tingle.Database.ThingBaseHelper;
-import com.bignerdranch.android.tingle.Database.ThingCursorWrapper;
-import com.bignerdranch.android.tingle.Database.ThingDBSchema.ThingTable;
+import com.bignerdranch.android.tingle.Model.Database.ThingBaseHelper;
+import com.bignerdranch.android.tingle.Model.Database.ThingCursorWrapper;
+import com.bignerdranch.android.tingle.Model.Database.ThingDBSchema.ThingTable;
 
 import java.util.ArrayList;
 import java.util.List;

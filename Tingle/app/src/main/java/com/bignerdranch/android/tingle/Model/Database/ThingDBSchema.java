@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle.Database;
+package com.bignerdranch.android.tingle.Model.Database;
 
 /**
  * Created by Pierre on 27-03-2016.

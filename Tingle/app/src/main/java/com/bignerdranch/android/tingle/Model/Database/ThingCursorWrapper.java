@@ -1,17 +1,12 @@
-package com.bignerdranch.android.tingle.Database;
+package com.bignerdranch.android.tingle.Model.Database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.bignerdranch.android.tingle.Thing;
+import com.bignerdranch.android.tingle.Model.Thing;
 
-import com.bignerdranch.android.tingle.Database.ThingDBSchema.ThingTable;
+import com.bignerdranch.android.tingle.Model.Database.ThingDBSchema.ThingTable;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 /**

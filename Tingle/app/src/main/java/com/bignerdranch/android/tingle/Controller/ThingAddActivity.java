@@ -1,16 +1,12 @@
-package com.bignerdranch.android.tingle;
+package com.bignerdranch.android.tingle.Controller;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 
-import java.util.UUID;
+import com.bignerdranch.android.tingle.R;
 
 /**
  * Created by Pierre on 27-03-2016.

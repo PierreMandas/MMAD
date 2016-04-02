@@ -12,19 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ListActivity">
+            android:name=".Controller.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".ThingPagerActivity"
-            android:parentActivityName=".ListActivity">
+            android:name=".Controller.ThingPagerActivity"
+            android:parentActivityName=".Controller.ListActivity">
         </activity>
         <activity
-            android:name=".ThingAddActivity"
-            android:parentActivityName=".ListActivity">
+            android:name=".Controller.ThingAddActivity"
+            android:parentActivityName=".Controller.ListActivity">
         </activity>
     </application>
 
