@@ -47,7 +47,7 @@ public class ThingsDB extends Observable {
         return values;
     }
 
-    private ThingCursorWrapper queryThings(String whereClause, String[] whereArgs) {
+    private ThingCursorWrapper queryThings(String whereClause, String[] whereArgs, String orderBy) {
         Cursor cursor = mDatabase.query(
                 ThingTable.NAME,
                 null, // Columns - null selects all columns
@@ -55,7 +55,7 @@ public class ThingsDB extends Observable {
                 whereArgs,
                 null, // groupBy
                 null, // having
-                null  // orderBy
+                orderBy  // orderBy
         );
 
         return new ThingCursorWrapper(cursor);
@@ -71,7 +71,7 @@ public class ThingsDB extends Observable {
     }
 
     public Thing get(UUID uuid) {
-        ThingCursorWrapper cursor = queryThings(ThingTable.Cols.UUID + " = ?", new String[]{uuid.toString()});
+        ThingCursorWrapper cursor = queryThings(ThingTable.Cols.UUID + " = ?", new String[]{uuid.toString()}, null);
 
         try {
             if (cursor.getCount() == 0) {
@@ -86,7 +86,7 @@ public class ThingsDB extends Observable {
     }
 
     public List<Thing> getThings(String what) {
-        ThingCursorWrapper cursor = queryThings(ThingTable.Cols.WHAT + " = ?", new String[]{what.toUpperCase()});
+        ThingCursorWrapper cursor = queryThings(ThingTable.Cols.WHAT + " LIKE ?", new String[]{what+"%"}, ThingTable.Cols.WHAT);
 
         List<Thing> things = new ArrayList<>();
 
@@ -121,7 +121,7 @@ public class ThingsDB extends Observable {
     public List<Thing> getThingsDB() {
         List<Thing> things = new ArrayList<>();
 
-        ThingCursorWrapper cursor = queryThings(null, null);
+        ThingCursorWrapper cursor = queryThings(null, null, ThingTable.Cols.WHAT);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
