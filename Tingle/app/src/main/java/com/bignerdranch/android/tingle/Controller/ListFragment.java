@@ -41,6 +41,7 @@ public class ListFragment extends Fragment implements Observer {
     public interface toActivity {
         public void startAddActivity(); //Start activity from TingleFragment
         public void startViewPagerActivity(UUID uuid, String query); //Start activity for ViewPager
+        public void startSettingsActivity();
     }
 
     @Override
@@ -101,6 +102,9 @@ public class ListFragment extends Fragment implements Observer {
         switch (item.getItemId()) {
             case R.id.menu_item_new_thing:
                 ((toActivity) getActivity()).startAddActivity();
+                return true;
+            case R.id.menu_item_settings:
+                ((toActivity) getActivity()).startSettingsActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

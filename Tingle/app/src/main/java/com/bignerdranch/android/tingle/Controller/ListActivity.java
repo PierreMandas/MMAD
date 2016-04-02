@@ -44,4 +44,10 @@ public class ListActivity extends AppCompatActivity implements ListFragment.toAc
         Intent i = ThingPagerActivity.newIntent(this, uuid, searchThings);
         startActivity(i);
     }
+
+    @Override
+    public void startSettingsActivity() {
+        Intent i = SettingsActivity.newIntent(this);
+        startActivity(i);
+    }
 }

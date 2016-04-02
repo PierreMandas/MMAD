@@ -13,6 +13,12 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="Search for things"
         app:showAsAction="ifRoom|withText"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
+
+    <item
+        android:id="@+id/menu_item_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Settings for network"
+        app:showAsAction="ifRoom|withText"
         />
 </menu>

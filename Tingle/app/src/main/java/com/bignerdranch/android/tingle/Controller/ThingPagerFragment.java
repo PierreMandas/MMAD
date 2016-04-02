@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -38,6 +40,12 @@ import java.util.UUID;
  * Created by Pierre on 27-03-2016.
  */
 public class ThingPagerFragment extends Fragment {
+    private static final String WIFI = "Wi-Fi";
+    private static final String ANY = "AnyConnection";
+    private static boolean wifiConnected = false;
+    private static boolean mobileConnected = false;
+    private static String sPref = null;
+
     private static final String TAG = "ThingPagerFragment";
     private static final String ARG_THING_ID = "thing_id";
 
@@ -62,6 +70,23 @@ public class ThingPagerFragment extends Fragment {
         mThing = ThingsDB.get(getContext()).get(thingId);
 
         setHasOptionsMenu(true);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sPref = sharedPrefs.getString("listPreference", "Wi-Fi");
+        updateConnectedFlags();
+    }
+
+    public void updateConnectedFlags() {
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()) {
+            wifiConnected = networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            mobileConnected = networkInfo.getType() == ConnectivityManager.TYPE_MOBILE;
+        } else {
+            wifiConnected = false;
+            mobileConnected = false;
+        }
     }
 
     @Override
@@ -160,7 +185,7 @@ public class ThingPagerFragment extends Fragment {
                 //If barcode, set text of textview to content of barcode
                 mBarcode.setText(contents);
 
-                if(isOnline()) {
+                if(((sPref.equals(ANY)) && (wifiConnected || mobileConnected)) || ((sPref.equals(WIFI)) && (wifiConnected))) {
                     new FetchOutpanTask().execute(mBarcode.getText().toString());
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "No network connection available!", Toast.LENGTH_LONG);
@@ -173,13 +198,6 @@ public class ThingPagerFragment extends Fragment {
                 toast.show();
             }
         }
-    }
-
-    //Check if WIFI or mobile connection is active.
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
     }
 
     private void lockScreenOrientation() {
