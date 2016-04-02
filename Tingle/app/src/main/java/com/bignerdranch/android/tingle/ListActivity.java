@@ -38,8 +38,8 @@ public class ListActivity extends AppCompatActivity implements ListFragment.toAc
     }
 
     @Override
-    public void startViewPagerActivity(UUID uuid) {
-        Intent i = ThingPagerActivity.newIntent(this, uuid);
+    public void startViewPagerActivity(UUID uuid, String searchThings) {
+        Intent i = ThingPagerActivity.newIntent(this, uuid, searchThings);
         startActivity(i);
     }
 }

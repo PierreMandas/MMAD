@@ -105,7 +105,6 @@ public class ThingAddFragment extends Fragment {
                 mBarcode.setText(contents);
 
                 //Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
-                //toast.setGravity(Gravity.TOP, 25, 400);
                 //toast.show();
             } else if (resultCode == getActivity().RESULT_CANCELED) {
                 // Handle cancel

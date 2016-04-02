@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bignerdranch.android.tingle.Database.ThingBaseHelper;
 import com.bignerdranch.android.tingle.Database.ThingCursorWrapper;
@@ -83,6 +84,20 @@ public class ThingsDB extends Observable {
         } finally {
             cursor.close();
         }
+    }
+
+    public List<Thing> getThings(String what) {
+        ThingCursorWrapper cursor = queryThings(ThingTable.Cols.WHAT + " = ?", new String[]{what.toUpperCase()});
+
+        List<Thing> things = new ArrayList<>();
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            things.add(cursor.getThing());
+            cursor.moveToNext();
+        }
+
+        return things;
     }
 
     public void remove(UUID uuid) {

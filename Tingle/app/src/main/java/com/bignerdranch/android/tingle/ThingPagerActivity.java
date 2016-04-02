@@ -19,13 +19,16 @@ import java.util.UUID;
 public class ThingPagerActivity extends AppCompatActivity {
     private static final String EXTRA_THING_ID =
             "com.bignerdranch.android.tingle.thing_id";
+    private static final String EXTRA_SEARCH_THINGS =
+            "com.bignerdranch.android.tingle.search_things";
 
     private ViewPager mViewPager;
     private List<Thing> mThings;
 
-    public static Intent newIntent(Context packageContext, UUID thingId) {
+    public static Intent newIntent(Context packageContext, UUID thingId, String searchThings) {
         Intent intent = new Intent(packageContext, ThingPagerActivity.class);
         intent.putExtra(EXTRA_THING_ID, thingId);
+        intent.putExtra(EXTRA_SEARCH_THINGS, searchThings);
         return intent;
     }
 
@@ -35,10 +38,17 @@ public class ThingPagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_thing_pager);
 
         UUID thingId = (UUID) getIntent().getSerializableExtra(EXTRA_THING_ID);
+        String searchThings = getIntent().getStringExtra(EXTRA_SEARCH_THINGS);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_thing_pager_view_pager);
 
-        mThings = ThingsDB.get(this).getThingsDB();
+        if(searchThings != null && !searchThings.isEmpty() && !searchThings.equals("null"))
+        {
+            mThings = ThingsDB.get(this).getThings(searchThings);
+        } else
+        {
+            mThings = ThingsDB.get(this).getThingsDB();
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 

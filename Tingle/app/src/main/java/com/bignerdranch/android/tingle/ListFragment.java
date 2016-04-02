@@ -3,8 +3,10 @@ package com.bignerdranch.android.tingle;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,9 +25,11 @@ import java.util.UUID;
  * Created by Pierre on 21-02-2016.
  */
 public class ListFragment extends Fragment implements Observer {
-    //fake database and adapter for loading in data, being used for the RecyclerView.
+    //Database and adapter for loading in data, being used for the RecyclerView.
     private RecyclerView mRecyclerView;
     private ThingAdapter mAdapter;
+
+    private String mSearchThings = null;
 
     @Override
     public void update(Observable observable, Object data) {
@@ -34,7 +38,7 @@ public class ListFragment extends Fragment implements Observer {
 
     public interface toActivity {
         public void startAddActivity(); //Start activity from TingleFragment
-        public void startViewPagerActivity(UUID uuid); //Start activity for ViewPager
+        public void startViewPagerActivity(UUID uuid, String query); //Start activity for ViewPager
     }
 
     @Override
@@ -64,6 +68,30 @@ public class ListFragment extends Fragment implements Observer {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.list_fragment_menu, menu);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_item_search_things));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String newText) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchThings) {
+                if (!searchThings.equals("")) {
+                    ThingsDB thingsDB = ThingsDB.get(getActivity());
+                    List<Thing> things = thingsDB.getThings(searchThings);
+
+                    mSearchThings = searchThings;
+
+                    mAdapter.setThings(things);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    updateUI();
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -114,7 +142,7 @@ public class ListFragment extends Fragment implements Observer {
 
         @Override
         public void onClick(View v) {
-            ((toActivity) getActivity()).startViewPagerActivity(mThing.getId());
+            ((toActivity) getActivity()).startViewPagerActivity(mThing.getId(), mSearchThings);
         }
     }
 

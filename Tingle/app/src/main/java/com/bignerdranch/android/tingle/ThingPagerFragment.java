@@ -3,9 +3,12 @@ package com.bignerdranch.android.tingle;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -99,8 +103,11 @@ public class ThingPagerFragment extends Fragment {
                     }
 
                     ThingsDB.get(getActivity()).update(mThing);
+
+                    Toast toast = Toast.makeText(getActivity(), "Item has been updated!", Toast.LENGTH_LONG);
+                    toast.show();
                 } else {
-                    Toast toast = Toast.makeText(getActivity(), "What and Where must contain words", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getActivity(), "What and where must contain something!", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
@@ -140,15 +147,34 @@ public class ThingPagerFragment extends Fragment {
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
                 // Handle successful scan
-
                 //If barcode, set text of textview to content of barcode
                 mBarcode.setText(contents);
+
+                new FetchOutpanTask().execute(mBarcode.getText().toString());
 
                 //Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
                 //toast.show();
             } else if (resultCode == getActivity().RESULT_CANCELED) {
                 // Handle cancel
                 Toast toast = Toast.makeText(getActivity(), "Scan was Cancelled!", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+    }
+
+    private class FetchOutpanTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String barCode = params[0];
+            return new OutpanFetcher().fetchItem(barCode);
+        }
+
+        @Override
+        protected void onPostExecute(String name) {
+            if(name != null && !name.isEmpty() && !name.equals("null")) {
+                mWhat.setText(name);
+            } else {
+                Toast toast = Toast.makeText(getActivity(), "No name found for the product. Please provide a name.", Toast.LENGTH_LONG);
                 toast.show();
             }
         }
