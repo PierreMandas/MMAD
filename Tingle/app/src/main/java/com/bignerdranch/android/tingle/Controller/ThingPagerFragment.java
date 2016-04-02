@@ -1,8 +1,12 @@
 package com.bignerdranch.android.tingle.Controller;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -157,7 +161,6 @@ public class ThingPagerFragment extends Fragment {
                 mBarcode.setText(contents);
 
                 if(isOnline()) {
-                    setRetainInstance(true);
                     new FetchOutpanTask().execute(mBarcode.getText().toString());
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "No network connection available!", Toast.LENGTH_LONG);
@@ -179,7 +182,32 @@ public class ThingPagerFragment extends Fragment {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
+    private void lockScreenOrientation() {
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+    }
+
+    private void unlockScreenOrientation() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+    }
+
     private class FetchOutpanTask extends AsyncTask<String, Void, String[]> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            lockScreenOrientation();
+            dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("Receiving data from Outpan!");
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
         @Override
         protected String[] doInBackground(String... params) {
             String barCode = params[0];
@@ -220,6 +248,9 @@ public class ThingPagerFragment extends Fragment {
                 Toast toast = Toast.makeText(getActivity(), "No name found for the product. Please provide a name.", Toast.LENGTH_LONG);
                 toast.show();
             }
+
+            dialog.dismiss();
+            unlockScreenOrientation();
         }
     }
 }
