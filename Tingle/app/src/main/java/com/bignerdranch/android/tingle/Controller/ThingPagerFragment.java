@@ -157,6 +157,7 @@ public class ThingPagerFragment extends Fragment {
                 mBarcode.setText(contents);
 
                 if(isOnline()) {
+                    setRetainInstance(true);
                     new FetchOutpanTask().execute(mBarcode.getText().toString());
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "No network connection available!", Toast.LENGTH_LONG);

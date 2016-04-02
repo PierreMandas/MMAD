@@ -28,6 +28,10 @@ public class OutpanFetcher {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         try {
+            connection.setReadTimeout(10000 /* milliseconds */);
+            connection.setConnectTimeout(10000 /* milliseconds */);
+            connection.setRequestMethod("GET");
+
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = connection.getInputStream();
 
