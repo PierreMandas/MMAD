@@ -40,20 +40,24 @@ import java.util.UUID;
  * Created by Pierre on 27-03-2016.
  */
 public class ThingPagerFragment extends Fragment {
+    //Tag for debugging and id of item to be loaded into this fragment.
+    private static final String TAG = "ThingPagerFragment";
+    private static final String ARG_THING_ID = "thing_id";
+
+    //Information about the current connection, according to preferences of the user.
     private static final String WIFI = "Wi-Fi";
     private static final String ANY = "AnyConnection";
     private static boolean wifiConnected = false;
     private static boolean mobileConnected = false;
     private static String sPref = null;
 
-    private static final String TAG = "ThingPagerFragment";
-    private static final String ARG_THING_ID = "thing_id";
-
+    //Widget fields.
     private Thing mThing;
     private EditText mWhat;
     private EditText mWhere;
     private TextView mBarcode;
 
+    //Creates a new fragment and returns the fragment.
     public static ThingPagerFragment newInstance(UUID thingId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_THING_ID, thingId);
@@ -66,16 +70,19 @@ public class ThingPagerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Get thing with the thingId given as argument to this fragment.
         UUID thingId = (UUID) getArguments().getSerializable(ARG_THING_ID);
         mThing = ThingsDB.get(getContext()).get(thingId);
 
         setHasOptionsMenu(true);
 
+        //Being used for the network preferences of the user.
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sPref = sharedPrefs.getString("listPreference", "Wi-Fi");
         updateConnectedFlags();
     }
 
+    //Method to update the flags used to check connection type.
     public void updateConnectedFlags() {
         ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
 
@@ -100,6 +107,7 @@ public class ThingPagerFragment extends Fragment {
         mBarcode = (TextView) v.findViewById(R.id.Bar_code);
         mBarcode.setText(mThing.getBarcode());
 
+        //Scanner. This scanner is using the Barcode Scanner from the ZXing team.
         try {
             Button scanner = (Button) v.findViewById(R.id.scanner_BAR);
             scanner.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +119,6 @@ public class ThingPagerFragment extends Fragment {
                 }
 
             });
-
         } catch (ActivityNotFoundException anfe) {
             Log.e("onCreateView", "Scanner Not Found", anfe);
         }
@@ -125,6 +132,7 @@ public class ThingPagerFragment extends Fragment {
         inflater.inflate(R.menu.thing_fragment_menu, menu);
     }
 
+    //Handles click on menu items.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -175,6 +183,7 @@ public class ThingPagerFragment extends Fragment {
         }
     }
 
+    //Being used to return the result of using our barcode scanner.
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
             if (resultCode == getActivity().RESULT_OK) {
@@ -200,6 +209,8 @@ public class ThingPagerFragment extends Fragment {
         }
     }
 
+    //Ensures that the screen is locked, whenever we are fetching from the internet.
+    //Without this method, rotation on fetching of data would result in a crash.
     private void lockScreenOrientation() {
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -209,13 +220,17 @@ public class ThingPagerFragment extends Fragment {
         }
     }
 
+    //Unlocks the screen when we are done fetching data
     private void unlockScreenOrientation() {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
+    //This inner class uses our OutpanFetcher to fetch data.
     private class FetchOutpanTask extends AsyncTask<String, Void, String[]> {
         ProgressDialog dialog;
 
+        //Before execute of the background thread, make ProgressDialog to show
+        //the user that work is being done.
         @Override
         protected void onPreExecute() {
             lockScreenOrientation();
@@ -226,6 +241,7 @@ public class ThingPagerFragment extends Fragment {
             dialog.show();
         }
 
+        //Execute background thread
         @Override
         protected String[] doInBackground(String... params) {
             String barCode = params[0];
@@ -245,6 +261,8 @@ public class ThingPagerFragment extends Fragment {
             return new String[]{name, exception};
         }
 
+        //After executing background thread, handle exceptions if any, else do the necessary
+        //work to get done.
         @Override
         protected void onPostExecute(String[] args) {
             String name = args[0];

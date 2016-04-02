@@ -7,13 +7,14 @@ import java.util.UUID;
  * Created by Pierre on 07-02-2016.
  */
 public class Thing{
+    //Fields of our thing.
     private UUID mId = null;
     private String mWhat = null;
     private String mWhere = null;
     private String mDate = null;
     private String mBarcode = null;
 
-    //Thing constructor
+    //Thing constructor.
     public Thing(UUID id, String what, String where) {
         mId = id;
         mWhat = what;
@@ -21,7 +22,7 @@ public class Thing{
         mDate = new Date().toString();
     }
 
-    //Getters, Setters and toString
+    //Getters, Setters and toString.
     public UUID getId() { return mId; }
     public String getWhat() { return mWhat; }
     public void setWhat(String what) { mWhat = what; }

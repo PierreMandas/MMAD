@@ -25,7 +25,7 @@ public class ListActivity extends AppCompatActivity implements ListFragment.toAc
         FragmentManager fm = getSupportFragmentManager();
         listFragment = fm.findFragmentById(R.id.activity_list_container);
 
-        //If Fragment hasn't been initialized, create a new fragment and
+        //If fragment hasn't been initialized, create a new fragment and
         //load it into the fragment container.
         if (listFragment == null) {
             listFragment = new ListFragment();
@@ -39,12 +39,15 @@ public class ListActivity extends AppCompatActivity implements ListFragment.toAc
         startActivity(i);
     }
 
+
+    //Starts the ViewPager activity.
     @Override
     public void startViewPagerActivity(UUID uuid, String searchThings) {
         Intent i = ThingPagerActivity.newIntent(this, uuid, searchThings);
         startActivity(i);
     }
 
+    //Starts the Settings activity.
     @Override
     public void startSettingsActivity() {
         Intent i = SettingsActivity.newIntent(this);

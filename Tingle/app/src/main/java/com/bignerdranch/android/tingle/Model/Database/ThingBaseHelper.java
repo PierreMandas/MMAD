@@ -6,9 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bignerdranch.android.tingle.Model.Database.ThingDBSchema.ThingTable;
 
-/**
- * Created by Pierre on 27-03-2016.
- */
 public class ThingBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private static final String DATABASE_NAME = "thingBase.db";
@@ -17,6 +14,7 @@ public class ThingBaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
+    //Creates our database table.
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + ThingTable.NAME + "(" +

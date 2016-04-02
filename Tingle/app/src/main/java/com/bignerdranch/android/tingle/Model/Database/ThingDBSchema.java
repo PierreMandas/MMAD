@@ -1,9 +1,7 @@
 package com.bignerdranch.android.tingle.Model.Database;
 
-/**
- * Created by Pierre on 27-03-2016.
- */
 public class ThingDBSchema {
+    //Our database table schema.
     public static final class ThingTable {
         public static final String NAME = "things";
 

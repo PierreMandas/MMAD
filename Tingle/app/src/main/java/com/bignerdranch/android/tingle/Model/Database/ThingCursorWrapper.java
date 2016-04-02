@@ -9,14 +9,12 @@ import com.bignerdranch.android.tingle.Model.Database.ThingDBSchema.ThingTable;
 
 import java.util.UUID;
 
-/**
- * Created by Pierre on 27-03-2016.
- */
 public class ThingCursorWrapper extends CursorWrapper {
     public ThingCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
+    //Method used to get a thing according to where the cursor is positioned.
     public Thing getThing() {
         String uuidString = getString(getColumnIndex(ThingTable.Cols.UUID));
         String what = getString(getColumnIndex(ThingTable.Cols.WHAT));

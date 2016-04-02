@@ -30,7 +30,7 @@ public class ThingAddActivity extends AppCompatActivity {
             fm.beginTransaction().add(R.id.activity_thing_add_container, addFragment).commit();
         }
 
-        //Only show keyboard whenver user clicks on textview in the fragment
+        //Only show keyboard whenver user clicks on textview in the fragment.
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 }

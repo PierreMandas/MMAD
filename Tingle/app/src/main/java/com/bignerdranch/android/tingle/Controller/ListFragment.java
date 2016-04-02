@@ -31,16 +31,19 @@ public class ListFragment extends Fragment implements Observer {
     private RecyclerView mRecyclerView;
     private ThingAdapter mAdapter;
 
+    //String being used for the search functionality.
     private String mSearchThings = null;
 
+    //Override of the update method from the observer class.
     @Override
     public void update(Observable observable, Object data) {
         updateUI();
     }
 
+    //Interface to make sure that the activity is doing the calls to new activity and not the fragment itself.
     public interface toActivity {
-        public void startAddActivity(); //Start activity from TingleFragment
-        public void startViewPagerActivity(UUID uuid, String query); //Start activity for ViewPager
+        public void startAddActivity(); //Start activity from TingleFragment.
+        public void startViewPagerActivity(UUID uuid, String query); //Start activity for ViewPager.
         public void startSettingsActivity();
     }
 
@@ -50,6 +53,7 @@ public class ListFragment extends Fragment implements Observer {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        //Add observer on the ThingsDB.
         ThingsDB.get(getActivity()).addObserver(this);
     }
 
@@ -58,10 +62,11 @@ public class ListFragment extends Fragment implements Observer {
         //Inflater loads the view.
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-        //Initialize RecyclerView
+        //Initialize RecyclerView.
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        //Initialises the RecyclerView adapter and sets data of the adapter to show in the RecyclerView.
         updateUI();
 
         return v;
@@ -72,6 +77,7 @@ public class ListFragment extends Fragment implements Observer {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.list_fragment_menu, menu);
 
+        //Search functionality, with a SearchView.
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_item_search_things));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -79,6 +85,9 @@ public class ListFragment extends Fragment implements Observer {
                 return false;
             }
 
+            //If there is being searched for anything specific, get these specific items from
+            //the database else load the whole list into the adapter. Search happens after
+            //each keystroke, for realtime search.
             @Override
             public boolean onQueryTextChange(String searchThings) {
                 if (!searchThings.equals("")) {
@@ -97,6 +106,7 @@ public class ListFragment extends Fragment implements Observer {
         });
     }
 
+    //Handling click on menu items.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -111,6 +121,7 @@ public class ListFragment extends Fragment implements Observer {
         }
     }
 
+    //Method to update the content of the adapter.
     private void updateUI() {
         ThingsDB thingsDB = ThingsDB.get(getActivity());
         List<Thing> things = thingsDB.getThingsDB();
@@ -124,7 +135,7 @@ public class ListFragment extends Fragment implements Observer {
         }
     }
 
-    //Holder class for RecyclerView
+    //Holder class for RecyclerView.
     private class ThingHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private Thing mThing;
         private TextView mWhat;
@@ -139,6 +150,7 @@ public class ListFragment extends Fragment implements Observer {
             mDate = (TextView) itemView.findViewById(R.id.list_item_thing_date);
         }
 
+        //Binder for the holder.
         public void bindThing(Thing thing) {
             mThing = thing;
             mWhat.setText("What: " + mThing.getWhat());
@@ -146,13 +158,15 @@ public class ListFragment extends Fragment implements Observer {
             mDate.setText("Date added: " + mThing.getDate());
         }
 
+        //Get specific item on click. If there has been searched for specific items,
+        //open the item choosen from the specific items.
         @Override
         public void onClick(View v) {
             ((toActivity) getActivity()).startViewPagerActivity(mThing.getId(), mSearchThings);
         }
     }
 
-    //Adapter class for RecyclerView
+    //Adapter class for RecyclerView.
     private class ThingAdapter extends RecyclerView.Adapter<ThingHolder> {
         private List<Thing> mThingList;
 
@@ -179,6 +193,7 @@ public class ListFragment extends Fragment implements Observer {
             return mThingList.size();
         }
 
+        //Set content of adapter to the given list.
         public void setThings(List<Thing> things) {
             mThingList = things;
         }

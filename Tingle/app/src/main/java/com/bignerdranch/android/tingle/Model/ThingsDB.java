@@ -36,6 +36,7 @@ public class ThingsDB extends Observable {
         mDatabase = new ThingBaseHelper(mContext).getWritableDatabase();
     }
 
+    //Wraps our values in a ContentValues and returns it.
     private static ContentValues getContentValues(Thing thing) {
         ContentValues values = new ContentValues();
         values.put(ThingTable.Cols.UUID, thing.getId().toString());
@@ -47,6 +48,7 @@ public class ThingsDB extends Observable {
         return values;
     }
 
+    //Method being used to query for things.
     private ThingCursorWrapper queryThings(String whereClause, String[] whereArgs, String orderBy) {
         Cursor cursor = mDatabase.query(
                 ThingTable.NAME,
@@ -61,7 +63,7 @@ public class ThingsDB extends Observable {
         return new ThingCursorWrapper(cursor);
     }
 
-    //Add, get, remove and update.
+    //Add method.
     public void addThing(Thing thing) {
         ContentValues values = getContentValues(thing);
         mDatabase.insert(ThingTable.NAME, null, values);
@@ -70,6 +72,7 @@ public class ThingsDB extends Observable {
         notifyObservers();
     }
 
+    //Get method.
     public Thing get(UUID uuid) {
         ThingCursorWrapper cursor = queryThings(ThingTable.Cols.UUID + " = ?", new String[]{uuid.toString()}, null);
 
@@ -85,6 +88,7 @@ public class ThingsDB extends Observable {
         }
     }
 
+    //Get every item with the specific what.
     public List<Thing> getThings(String what) {
         ThingCursorWrapper cursor = queryThings(ThingTable.Cols.WHAT + " LIKE ?", new String[]{what+"%"}, ThingTable.Cols.WHAT);
 
@@ -99,6 +103,7 @@ public class ThingsDB extends Observable {
         return things;
     }
 
+    //Remove method.
     public void remove(UUID uuid) {
         String uuidString = uuid.toString();
 
@@ -108,6 +113,7 @@ public class ThingsDB extends Observable {
         notifyObservers();
     }
 
+    //Update method.
     public void update(Thing thing) {
         String uuidString = thing.getId().toString();
         ContentValues values = getContentValues(thing);
@@ -118,6 +124,7 @@ public class ThingsDB extends Observable {
         notifyObservers();
     }
 
+    //Get every item in our database table.
     public List<Thing> getThingsDB() {
         List<Thing> things = new ArrayList<>();
 

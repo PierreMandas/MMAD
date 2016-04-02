@@ -21,14 +21,18 @@ import java.util.UUID;
  * Created by Pierre on 26-03-2016.
  */
 public class ThingPagerActivity extends AppCompatActivity {
+    //Strings being used to get the specific item for the ThingPagerFragment and
+    //the string to specify which items the viewpager will look at.
     private static final String EXTRA_THING_ID =
             "com.bignerdranch.android.tingle.thing_id";
     private static final String EXTRA_SEARCH_THINGS =
             "com.bignerdranch.android.tingle.search_things";
 
+    //ViewPager and our item list.
     private ViewPager mViewPager;
     private List<Thing> mThings;
 
+    //Creates a new intent.
     public static Intent newIntent(Context packageContext, UUID thingId, String searchThings) {
         Intent intent = new Intent(packageContext, ThingPagerActivity.class);
         intent.putExtra(EXTRA_THING_ID, thingId);
@@ -46,6 +50,8 @@ public class ThingPagerActivity extends AppCompatActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.activity_thing_pager_view_pager);
 
+        //If we have searched for any specific item/items, get these items else get every
+        //item in our database, and show these.
         if(searchThings != null && !searchThings.isEmpty() && !searchThings.equals("null"))
         {
             mThings = ThingsDB.get(this).getThings(searchThings);
@@ -56,6 +62,7 @@ public class ThingPagerActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
+        //Adapter of our viewpager.
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
@@ -69,6 +76,8 @@ public class ThingPagerActivity extends AppCompatActivity {
             }
         });
 
+        //Find specific item with the thing id given to this activity and
+        //set the current viewpage item to this specific item.
         for (int i = 0; i < mThings.size(); i++) {
             if (mThings.get(i).getId().equals(thingId)) {
                 mViewPager.setCurrentItem(i);
