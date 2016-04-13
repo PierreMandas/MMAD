@@ -7,12 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -24,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +39,7 @@ import com.bignerdranch.android.tingle.R;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -43,6 +50,8 @@ public class ThingPagerFragment extends Fragment {
     //Tag for debugging and id of item to be loaded into this fragment.
     private static final String TAG = "ThingPagerFragment";
     private static final String ARG_THING_ID = "thing_id";
+    private static final int REQUEST_PHOTO = 0;
+    private static final int REQUEST_BAR = 1;
 
     //Information about the current connection, according to preferences of the user.
     private static final String WIFI = "Wi-Fi";
@@ -51,10 +60,13 @@ public class ThingPagerFragment extends Fragment {
     private static boolean mobileConnected = false;
     private static String sPref = null;
 
-    //Widget fields.
+    //Widget and other fields.
     private Thing mThing;
+    private File mPhotoFile;
     private EditText mWhat;
     private EditText mWhere;
+    private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
     private TextView mBarcode;
 
     //Creates a new fragment and returns the fragment.
@@ -70,9 +82,11 @@ public class ThingPagerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //Get thing with the thingId given as argument to this fragment.
         UUID thingId = (UUID) getArguments().getSerializable(ARG_THING_ID);
         mThing = ThingsDB.get(getContext()).get(thingId);
+        mPhotoFile = ThingsDB.get(getActivity()).getPhotoFile(mThing);
 
         setHasOptionsMenu(true);
 
@@ -96,14 +110,50 @@ public class ThingPagerFragment extends Fragment {
         }
     }
 
+    //Method to update the photoview.
+    private void updatePhotoview() {
+        if(mPhotoFile == null || !mPhotoFile.exists()) {
+            mPhotoView.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            mPhotoView.setImageBitmap(bitmap);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_thing, container, false);
+
+        PackageManager packageManager = getActivity().getPackageManager();
 
         mWhat = (EditText) v.findViewById(R.id.thing_what);
         mWhat.setText(mThing.getWhat());
         mWhere = (EditText) v.findViewById(R.id.thing_where);
         mWhere.setText(mThing.getWhere());
+
+
+        mPhotoButton = (ImageButton) v.findViewById(R.id.thing_camera);
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        boolean canTakePhoto = (mPhotoFile != null && captureImage.resolveActivity(packageManager) != null);
+        mPhotoButton.setEnabled(canTakePhoto);
+
+        if(canTakePhoto) {
+            Uri uri = Uri.fromFile(mPhotoFile);
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
+
+        mPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(captureImage, REQUEST_PHOTO);
+            }
+        });
+
+
+        mPhotoView = (ImageView) v.findViewById(R.id.thing_photo);
+        updatePhotoview();
+
         mBarcode = (TextView) v.findViewById(R.id.Bar_code);
         mBarcode.setText(mThing.getBarcode());
 
@@ -115,7 +165,7 @@ public class ThingPagerFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                     intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
-                    startActivityForResult(intent, 0);
+                    startActivityForResult(intent, REQUEST_BAR);
                 }
 
             });
@@ -185,8 +235,17 @@ public class ThingPagerFragment extends Fragment {
 
     //Being used to return the result of using our barcode scanner.
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-            if (resultCode == getActivity().RESULT_OK) {
+        if(requestCode == REQUEST_PHOTO) {
+            if(resultCode == getActivity().RESULT_OK) {
+                updatePhotoview();
+            } else {
+                Toast toast = Toast.makeText(getActivity(), "Picture taking was cancelled!", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+
+        if(requestCode == REQUEST_BAR) {
+            if(resultCode == getActivity().RESULT_OK) {
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
@@ -201,9 +260,9 @@ public class ThingPagerFragment extends Fragment {
                     toast.show();
                 }
 
-            } else if (resultCode == getActivity().RESULT_CANCELED) {
+            } else if(resultCode == getActivity().RESULT_CANCELED) {
                 // Handle cancel
-                Toast toast = Toast.makeText(getActivity(), "Scan was Cancelled!", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getActivity(), "Scan was cancelled!", Toast.LENGTH_LONG);
                 toast.show();
             }
         }

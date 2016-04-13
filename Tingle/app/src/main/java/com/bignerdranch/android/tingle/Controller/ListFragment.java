@@ -1,5 +1,6 @@
 package com.bignerdranch.android.tingle.Controller;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -12,12 +13,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.tingle.Model.Thing;
 import com.bignerdranch.android.tingle.Model.ThingsDB;
 import com.bignerdranch.android.tingle.R;
 
+import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -138,6 +141,8 @@ public class ListFragment extends Fragment implements Observer {
     //Holder class for RecyclerView.
     private class ThingHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private Thing mThing;
+        private File mPhotoFile;
+        private ImageView mPhotoView;
         private TextView mWhat;
         private TextView mWhere;
         private TextView mDate;
@@ -145,6 +150,9 @@ public class ListFragment extends Fragment implements Observer {
         public ThingHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+
+            mPhotoView = (ImageView) itemView.findViewById(R.id.list_thing_photo);
+
             mWhat = (TextView) itemView.findViewById(R.id.list_item_thing_what);
             mWhere = (TextView) itemView.findViewById(R.id.list_item_thing_where);
             mDate = (TextView) itemView.findViewById(R.id.list_item_thing_date);
@@ -156,6 +164,15 @@ public class ListFragment extends Fragment implements Observer {
             mWhat.setText("What: " + mThing.getWhat());
             mWhere.setText("Where: " + mThing.getWhere());
             mDate.setText("Date added: " + mThing.getDate());
+
+            mPhotoFile = ThingsDB.get(getActivity()).getPhotoFile(mThing);
+
+            if(mPhotoFile == null || !mPhotoFile.exists()) {
+                mPhotoView.setImageDrawable(null);
+            } else {
+                Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+                mPhotoView.setImageBitmap(bitmap);
+            }
         }
 
         //Get specific item on click. If there has been searched for specific items,

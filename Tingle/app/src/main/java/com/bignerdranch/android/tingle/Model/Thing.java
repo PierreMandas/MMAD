@@ -30,6 +30,7 @@ public class Thing{
     public void setWhere(String where) { mWhere = where; }
     public String getDate() { return mDate; }
     public void setDate(String Date) { mDate = Date; }
+    public String getPhotoFilename() { return "IMG_" + getId().toString() + ".jpg"; }
     public String getBarcode() { return mBarcode; }
     public void setBarcode(String mBarcode) { this.mBarcode = mBarcode; }
 }

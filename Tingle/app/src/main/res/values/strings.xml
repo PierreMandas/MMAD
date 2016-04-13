@@ -9,7 +9,7 @@
     <string name="update_thing">Update thing</string>
     <string name="list_all_things">List of all things</string>
     <string name="thing_where_label">Where</string>
-    <string name="thing_where_hint">Where has the item been placed?</string>
+    <string name="thing_where_hint">Where has it been placed?</string>
     <string name="thing_what_label">What</string>
     <string name="thing_what_hint">What item has been placed?</string>
     <string name="scan_label">Scan</string>

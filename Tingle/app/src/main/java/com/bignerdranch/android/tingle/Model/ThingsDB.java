@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
 import com.bignerdranch.android.tingle.Model.Database.ThingBaseHelper;
 import com.bignerdranch.android.tingle.Model.Database.ThingCursorWrapper;
 import com.bignerdranch.android.tingle.Model.Database.ThingDBSchema.ThingTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -86,6 +88,17 @@ public class ThingsDB extends Observable {
         } finally {
             cursor.close();
         }
+    }
+
+    //Get photo of item
+    public File getPhotoFile(Thing thing) {
+        File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        if(externalFilesDir == null) {
+            return null;
+        }
+
+        return new File(externalFilesDir, thing.getPhotoFilename());
     }
 
     //Get every item with the specific what.
