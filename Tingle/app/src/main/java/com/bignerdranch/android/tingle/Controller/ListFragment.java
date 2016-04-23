@@ -1,5 +1,6 @@
 package com.bignerdranch.android.tingle.Controller;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,7 +46,6 @@ public class ListFragment extends Fragment implements Observer {
 
     //Interface to make sure that the activity is doing the calls to new activity and not the fragment itself.
     public interface toActivity {
-        public void startAddActivity(); //Start activity from TingleFragment.
         public void startViewPagerActivity(UUID uuid, String query); //Start activity for ViewPager.
         public void startSettingsActivity();
     }
@@ -114,7 +114,12 @@ public class ListFragment extends Fragment implements Observer {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new_thing:
-                ((toActivity) getActivity()).startAddActivity();
+                Thing thing = new Thing(UUID.randomUUID(), "", "");
+                ThingsDB.get(getActivity()).addThing(thing);
+
+                Intent intent = ThingPagerActivity.newIntent(getActivity(), thing.getId(), "");
+                startActivity(intent);
+
                 return true;
             case R.id.menu_item_settings:
                 ((toActivity) getActivity()).startSettingsActivity();

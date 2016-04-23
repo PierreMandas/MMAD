@@ -28,11 +28,6 @@
         </activity>
 
         <activity
-            android:name=".Controller.ThingAddActivity"
-            android:parentActivityName=".Controller.ListActivity">
-        </activity>
-
-        <activity
             android:name=".Controller.SettingsActivity"
             android:parentActivityName=".Controller.ListActivity">
             <intent-filter>

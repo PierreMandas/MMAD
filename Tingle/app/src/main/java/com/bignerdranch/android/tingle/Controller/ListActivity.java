@@ -33,13 +33,6 @@ public class ListActivity extends AppCompatActivity implements ListFragment.toAc
         }
     }
 
-    @Override
-    public void startAddActivity() {
-        Intent i = new Intent(this, ThingAddActivity.class);
-        startActivity(i);
-    }
-
-
     //Starts the ViewPager activity.
     @Override
     public void startViewPagerActivity(UUID uuid, String searchThings) {
