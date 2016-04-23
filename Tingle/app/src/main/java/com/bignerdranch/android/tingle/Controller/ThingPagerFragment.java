@@ -1,6 +1,5 @@
 package com.bignerdranch.android.tingle.Controller;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -38,6 +37,7 @@ import com.bignerdranch.android.tingle.Model.ThingsDB;
 import com.bignerdranch.android.tingle.R;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +62,7 @@ public class ThingPagerFragment extends Fragment {
     private File mPhotoFile;
     private EditText mWhat;
     private EditText mWhere;
+    private TextView mDate;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private TextView mBarcode;
@@ -129,13 +130,15 @@ public class ThingPagerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_thing, container, false);
+        View v = inflater.inflate(R.layout.fragment_thing_pager, container, false);
 
         //Initialize what and where EditTexts.
         mWhat = (EditText) v.findViewById(R.id.thing_what);
         mWhat.setText(mThing.getWhat());
         mWhere = (EditText) v.findViewById(R.id.thing_where);
         mWhere.setText(mThing.getWhere());
+        mDate = (TextView) v.findViewById(R.id.thing_date);
+        mDate.setText(mThing.getDate());
 
         //Initialize button that will be used to start the captureImage intent.
         mPhotoButton = (ImageButton) v.findViewById(R.id.thing_camera);
@@ -167,7 +170,7 @@ public class ThingPagerFragment extends Fragment {
         updatePhotoview();
 
         //Initialize barcode TextView and set text to display the things barcode.
-        mBarcode = (TextView) v.findViewById(R.id.Bar_code);
+        mBarcode = (TextView) v.findViewById(R.id.bar_code);
         mBarcode.setText(mThing.getBarcode());
 
         //Scanner. This scanner is using the Barcode Scanner from the ZXing team.

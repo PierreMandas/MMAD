@@ -12,8 +12,10 @@
     <string name="thing_where_hint">Where has it been placed?</string>
     <string name="thing_what_label">What</string>
     <string name="thing_what_hint">What item has been placed?</string>
-    <string name="scan_label">Scan</string>
+    <string name="details_label">Details</string>
     <string name="scan_QR_code_hint">The QR code will be placed here</string>
     <string name="scan_BAR_code_hint">The BAR code will be placed here</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="date">Date added:</string>
+    <string name="barcode">Barcode nr.:</string>
 </resources>
