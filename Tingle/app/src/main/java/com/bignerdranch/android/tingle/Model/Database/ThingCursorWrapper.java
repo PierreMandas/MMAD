@@ -14,7 +14,7 @@ public class ThingCursorWrapper extends CursorWrapper {
         super(cursor);
     }
 
-    //Method used to get a thing according to where the cursor is positioned.
+    //Method used to get a thing according to where the cursor is positioned in our database.
     public Thing getThing() {
         String uuidString = getString(getColumnIndex(ThingTable.Cols.UUID));
         String what = getString(getColumnIndex(ThingTable.Cols.WHAT));

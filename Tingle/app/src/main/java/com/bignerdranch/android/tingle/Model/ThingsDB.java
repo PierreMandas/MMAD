@@ -20,12 +20,14 @@ import java.util.UUID;
  * Created by Pierre on 13-02-2016.
  */
 public class ThingsDB extends Observable {
+    //Singleton database
     private static ThingsDB sThingsDB;
 
+    //Context and database.
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    //return singleton if one has already ben initialized, else initialize a new one and return it.
+    //Return singleton if one has already been initialized, else initialize a new one and return it.
     public static ThingsDB get(Context context) {
         if(sThingsDB == null) {
             sThingsDB = new ThingsDB(context);
@@ -33,12 +35,19 @@ public class ThingsDB extends Observable {
         return sThingsDB;
     }
 
+    //Creates the database if no database has been made. Used by the static get method.
     private ThingsDB(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new ThingBaseHelper(mContext).getWritableDatabase();
     }
 
-    //Wraps our values in a ContentValues and returns it.
+    /**
+     * Wraps our values in a ContentValues and returns it. This ContentValue will be used
+     * to put or update stuff in our database.
+     *
+     * @param thing - The thing to wrap in a ContentValues type.
+     * @return - Return the wrapped thing.
+     */
     private static ContentValues getContentValues(Thing thing) {
         ContentValues values = new ContentValues();
         values.put(ThingTable.Cols.UUID, thing.getId().toString());
@@ -50,7 +59,14 @@ public class ThingsDB extends Observable {
         return values;
     }
 
-    //Method being used to query for things.
+    /**
+     * Method being used to query for things.
+     *
+     * @param whereClause - The where clause.
+     * @param whereArgs - Arguments to our where clause.
+     * @param orderBy - order the results by for example date added.
+     * @return - Returns our cursor in our own cursor wrapper.
+     */
     private ThingCursorWrapper queryThings(String whereClause, String[] whereArgs, String orderBy) {
         Cursor cursor = mDatabase.query(
                 ThingTable.NAME,
@@ -65,7 +81,11 @@ public class ThingsDB extends Observable {
         return new ThingCursorWrapper(cursor);
     }
 
-    //Add method.
+    /**
+     * Add method.
+     *
+     * @param thing - Thing to add to our database.
+     */
     public void addThing(Thing thing) {
         ContentValues values = getContentValues(thing);
         mDatabase.insert(ThingTable.NAME, null, values);
@@ -74,7 +94,12 @@ public class ThingsDB extends Observable {
         notifyObservers();
     }
 
-    //Get method.
+    /**
+     * Get method.
+     *
+     * @param uuid - UUID of the thing we want from our database.
+     * @return - Returns the thing found, with the given UUID.
+     */
     public Thing get(UUID uuid) {
         ThingCursorWrapper cursor = queryThings(ThingTable.Cols.UUID + " = ?", new String[]{uuid.toString()}, null);
 
@@ -90,7 +115,12 @@ public class ThingsDB extends Observable {
         }
     }
 
-    //Get photo of item
+    /**
+     * Get photo of thing.
+     *
+     * @param thing - The thing we want to get the photo of.
+     * @return - Returns a file pointing to our photo resource.
+     */
     public File getPhotoFile(Thing thing) {
         File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
@@ -101,7 +131,12 @@ public class ThingsDB extends Observable {
         return new File(externalFilesDir, thing.getPhotoFilename());
     }
 
-    //Get every item with the specific what.
+    /**
+     * Get every thing with the specific what.
+     *
+     * @param what - What of the things to be searched for.
+     * @return - Returns all found things with the given what value.
+     */
     public List<Thing> getThings(String what) {
         ThingCursorWrapper cursor = queryThings(ThingTable.Cols.WHAT + " LIKE ?", new String[]{what+"%"}, ThingTable.Cols.WHAT);
 
@@ -116,7 +151,11 @@ public class ThingsDB extends Observable {
         return things;
     }
 
-    //Remove method.
+    /**
+     * Remove method.
+     *
+     * @param uuid - UUID of the thing we want to remove.
+     */
     public void remove(UUID uuid) {
         String uuidString = uuid.toString();
 
@@ -126,7 +165,11 @@ public class ThingsDB extends Observable {
         notifyObservers();
     }
 
-    //Update method.
+    /**
+     * Update method.
+     *
+     * @param thing - UUID of the thing we want to update.
+     */
     public void update(Thing thing) {
         String uuidString = thing.getId().toString();
         ContentValues values = getContentValues(thing);
@@ -137,7 +180,11 @@ public class ThingsDB extends Observable {
         notifyObservers();
     }
 
-    //Get every item in our database table.
+    /**
+     * Get every item in our database table.
+     *
+     * @return - Returns a list containing every thing that is stored in our database.
+     */
     public List<Thing> getThingsDB() {
         List<Thing> things = new ArrayList<>();
 

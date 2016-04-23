@@ -14,7 +14,11 @@ public class ThingBaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
-    //Creates our database table.
+    /**
+     * Creates our database table.
+     *
+     * @param db - The database we will be creating our table in, namely thingBase.db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + ThingTable.NAME + "(" +

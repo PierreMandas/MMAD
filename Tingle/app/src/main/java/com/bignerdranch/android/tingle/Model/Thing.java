@@ -22,7 +22,7 @@ public class Thing{
         mDate = new Date().toString();
     }
 
-    //Getters, Setters and toString.
+    //Getters and setters.
     public UUID getId() { return mId; }
     public String getWhat() { return mWhat; }
     public void setWhat(String what) { mWhat = what; }

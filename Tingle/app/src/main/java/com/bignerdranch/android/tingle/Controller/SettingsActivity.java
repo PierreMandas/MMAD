@@ -8,6 +8,7 @@ import android.preference.PreferenceActivity;
 import com.bignerdranch.android.tingle.R;
 
 //Simple activity being used for the user to choose connection type (Wi-Fi or any connection).
+//Uses deprecated method, as I couldn't find anything else.
 public class SettingsActivity extends PreferenceActivity {
 
     public static Intent newIntent(Context packageContext) {

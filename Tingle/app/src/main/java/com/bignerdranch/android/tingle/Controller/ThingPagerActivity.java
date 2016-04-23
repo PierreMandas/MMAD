@@ -17,22 +17,28 @@ import com.bignerdranch.android.tingle.R;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by Pierre on 26-03-2016.
- */
 public class ThingPagerActivity extends AppCompatActivity {
     //Strings being used to get the specific item for the ThingPagerFragment and
-    //the string to specify which items the viewpager will look at.
+    //to specify which items the viewpager will look at.
     private static final String EXTRA_THING_ID =
             "com.bignerdranch.android.tingle.thing_id";
     private static final String EXTRA_SEARCH_THINGS =
             "com.bignerdranch.android.tingle.search_things";
 
-    //ViewPager and our item list.
+    //ViewPager and our thing list.
     private ViewPager mViewPager;
     private List<Thing> mThings;
 
-    //Creates a new intent.
+    //Creates a new intent with extras.
+
+    /**
+     * Creates a new intent with extras, that will be used find a specific thing and
+     * search for specific things.
+     *
+     * @param thingId - ID given to find a specific thing.
+     * @param searchThings - String being used to find specific things from searching.
+     * @return - Returns an intent with the extras put into it.
+     */
     public static Intent newIntent(Context packageContext, UUID thingId, String searchThings) {
         Intent intent = new Intent(packageContext, ThingPagerActivity.class);
         intent.putExtra(EXTRA_THING_ID, thingId);
@@ -45,12 +51,14 @@ public class ThingPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thing_pager);
 
+        //Get the extra values from the intent.
         UUID thingId = (UUID) getIntent().getSerializableExtra(EXTRA_THING_ID);
         String searchThings = getIntent().getStringExtra(EXTRA_SEARCH_THINGS);
 
+        //Initialize our ViewPager
         mViewPager = (ViewPager) findViewById(R.id.activity_thing_pager_view_pager);
 
-        //If we have searched for any specific item/items, get these items else get every
+        //If we have searched for any specific items, get these items else get every
         //item in our database, and show these.
         if(searchThings != null && !searchThings.isEmpty() && !searchThings.equals("null"))
         {
@@ -60,9 +68,11 @@ public class ThingPagerActivity extends AppCompatActivity {
             mThings = ThingsDB.get(this).getThingsDB();
         }
 
+        //Fragment manager being used by the ViewPager adapter.
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        //Adapter of our viewpager.
+        //Adapter of our viewpager. Uses the FragmentManager to load in a fragment displaying
+        //the specific thing.
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
@@ -85,7 +95,7 @@ public class ThingPagerActivity extends AppCompatActivity {
             }
         }
 
-        //Only show keyboard whenver user clicks on textview in the fragment
+        //Only show keyboard whenver user clicks on a TextView in the fragment.
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 }
