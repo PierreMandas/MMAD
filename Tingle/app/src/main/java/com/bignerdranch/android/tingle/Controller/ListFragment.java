@@ -105,16 +105,24 @@ public class ListFragment extends Fragment implements Observer {
             //each keystroke.
             @Override
             public boolean onQueryTextChange(String searchThings) {
+                System.out.println(searchThings);
+
                 if (!searchThings.equals("")) {
+                    mSearchThings = searchThings;
+
                     ThingsDB thingsDB = ThingsDB.get(getActivity());
                     List<Thing> things = thingsDB.getThings(searchThings);
-
-                    mSearchThings = searchThings;
 
                     mAdapter.setThings(things);
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    updateUI();
+                    mSearchThings = null;
+
+                    ThingsDB thingsDB = ThingsDB.get(getActivity());
+                    List<Thing> things = thingsDB.getThingsDB();
+
+                    mAdapter.setThings(things);
+                    mAdapter.notifyDataSetChanged();
                 }
                 return true;
             }

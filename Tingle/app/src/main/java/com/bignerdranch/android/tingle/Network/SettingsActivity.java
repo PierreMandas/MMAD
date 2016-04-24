@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle.Controller;
+package com.bignerdranch.android.tingle.Network;
 
 import android.content.Context;
 import android.content.Intent;

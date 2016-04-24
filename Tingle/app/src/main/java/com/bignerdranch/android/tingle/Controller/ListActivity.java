@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.bignerdranch.android.tingle.Network.SettingsActivity;
 import com.bignerdranch.android.tingle.R;
 
 import java.util.UUID;

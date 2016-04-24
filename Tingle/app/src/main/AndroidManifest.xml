@@ -28,7 +28,7 @@
         </activity>
 
         <activity
-            android:name=".Controller.SettingsActivity"
+            android:name=".Network.SettingsActivity"
             android:parentActivityName=".Controller.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />

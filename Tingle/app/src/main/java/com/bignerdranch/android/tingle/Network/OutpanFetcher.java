@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle.Controller;
+package com.bignerdranch.android.tingle.Network;
 
 import android.util.Log;
 

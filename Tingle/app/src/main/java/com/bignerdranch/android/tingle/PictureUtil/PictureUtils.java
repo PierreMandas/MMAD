@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tingle.Controller;
+package com.bignerdranch.android.tingle.PictureUtil;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

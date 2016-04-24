@@ -34,10 +34,11 @@ import android.widget.Toast;
 
 import com.bignerdranch.android.tingle.Model.Thing;
 import com.bignerdranch.android.tingle.Model.ThingsDB;
+import com.bignerdranch.android.tingle.Network.OutpanFetcher;
+import com.bignerdranch.android.tingle.PictureUtil.PictureUtils;
 import com.bignerdranch.android.tingle.R;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
